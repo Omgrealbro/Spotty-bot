@@ -231,4 +231,5 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.login(process.env.TOKEN);
+require('http').createServer((_, r) => r.end('OK')).listen(process.env.PORT || 3000);
 
