@@ -1,11 +1,21 @@
 process.env.FFMPEG_PATH = require('ffmpeg-static');
 require('dotenv').config();
+const http = require('http');
 const { 
     Client, GatewayIntentBits, REST, Routes, 
     EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField 
 } = require('discord.js');
 const { Player } = require('discord-player');
 const { DefaultExtractors } = require('@discord-player/extractor');
+
+// Dummy HTTP server to satisfy Render's port binding requirement
+const PORT = process.env.PORT || 3000;
+http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Spotty Bot is running!');
+}).listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});
 
 const client = new Client({
     intents: [
