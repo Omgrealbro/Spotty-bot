@@ -5,7 +5,7 @@ const {
     Client, GatewayIntentBits, REST, Routes, 
     EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionsBitField 
 } = require('discord.js');
-const { Player } = require('discord-player');
+const { Player, QueryType } = require('discord-player');
 const { DefaultExtractors } = require('@discord-player/extractor');
 
 // Dummy HTTP server to satisfy Render's port binding requirement
@@ -138,7 +138,11 @@ client.on('interactionCreate', async interaction => {
         }
 
         try {
+            // Automatically route text queries to SoundCloud to bypass YouTube datacenter IP blocks on Render
+            const searchEngine = query.startsWith('http') ? QueryType.AUTO : QueryType.SOUNDCLOUD_SEARCH;
+
             const { track } = await player.play(memberVC, query, {
+                searchEngine: searchEngine,
                 nodeOptions: { 
                     metadata: { channel: interaction.channel }, 
                     volume: 50,
@@ -229,7 +233,7 @@ client.on('interactionCreate', async interaction => {
             .setColor('#800080')
             .setTitle('🤖 Spotty Commands')
             .addFields(
-                { name: '🎵 `/play [song/link]`', value: 'Play music from YT, Spotify, or name' },
+                { name: '🎵 `/play [song/link]`', value: 'Play music by name or link' },
                 { name: '📥 `/join`', value: 'Make the bot join your VC' },
                 { name: '📤 `/leave`', value: 'Stop music and leave VC' },
                 { name: '📜 `/musiclist`', value: 'View the upcoming song queue' },
