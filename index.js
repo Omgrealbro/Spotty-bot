@@ -38,7 +38,7 @@ const commands = [
 
 client.once('ready', async () => {
     console.log(`🎵 Logged in as ${client.user.tag}!`);
-    await player.extractors.loadMulti(DefaultExtractors);
+    await player.extractors.loadDefault((ext) => ext !== 'YouTubeExtractor');
     
     const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
     try {
